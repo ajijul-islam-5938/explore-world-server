@@ -8,7 +8,7 @@ console.log("DB_USER:", process.env.DB_USER);
 console.log("DB_PASSWORD:", process.env.DB_PASSWORD);
 
 // Middleware
-app.use(cors());
+app.use(cors())
 app.use(express.json());
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
@@ -45,6 +45,25 @@ async function run() {
       const cursor = await spotCollection.findOne(query);
       res.send(cursor); 
     });
+
+    app.get("/alltouristspot/mylist/:email",async(req,res)=>{
+      const email = req.params.email;
+      console.log(email);
+      const query = {userEmail:email}
+      const cursor = spotCollection.find(query)
+      const result = await cursor.toArray();
+      res.send(result);
+
+      // const cursor = await 
+    })
+
+    app.get("/alltouristspot/mylist/:email/:id",async(req,res)=>{
+      const email = req.params.email;
+      const id = req.params.id;
+      const query = {userEmail : email , _id : new ObjectId(id)}
+      const cursor = await spotCollection.findOne(query);
+      res.send(cursor)
+    })
 
     app.post("/touristspot", async (req, res) => {
       const user = req.body;
