@@ -46,6 +46,31 @@ async function run() {
       res.send(cursor); 
     });
 
+    app.put("/alltouristspot/:id", async(req,res)=>{
+      const id = req.params.id;
+      const spotData = await req.body; 
+      const query = {_id : new ObjectId(id)};
+      const option = {upsert: true}
+      const updatedSpot = {
+        $set : {
+          spotName : spotData.spotName,
+          image : spotData.image,
+          countryName : spotData.countryName,
+          location : spotData.location,
+          shortDescription : spotData.shortDescription,
+          averageCost : spotData.averageCost,
+          seasonality : spotData.seasonality,
+          travelTime : spotData.travelTime,
+          totalVisitorsPerYear : spotData.totalVisitorsPerYear,
+          userEmail : spotData.userEmail,
+          userName : spotData.userName
+
+        }
+      }
+      const result = await spotCollection.updateOne(query,updatedSpot,option);
+      res.send(result);
+    })
+
     app.get("/alltouristspot/mylist/:email",async(req,res)=>{
       const email = req.params.email;
       console.log(email);
