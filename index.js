@@ -37,6 +37,12 @@ async function run() {
       res.send(data);
     })
 
+    app.get("/countries/:name" , async (req,res)=>{
+      const country = req.params.name;
+      const result = await spotCollection.find({countryName : country}).toArray();
+      res.send(result);
+    })
+
     app.get("/alltouristspot", async (req, res) => {
       const data = await spotCollection.find().toArray();
       res.send(data);
