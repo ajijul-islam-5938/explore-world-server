@@ -31,6 +31,11 @@ async function run() {
     const countryDB = client.db("countryData");
     const spotCollection = database.collection("spotCollection");
     const countryCollection = countryDB.collection("countryCollection");
+
+    app.get("/",async(req,res)=>{
+      res.send("data coming soon ");
+    })
+
     // Define routes
     app.get("/countries" , async (req,res)=>{
       const data = await countryCollection.find().toArray();
@@ -80,10 +85,10 @@ async function run() {
       res.send(result);
     })
 
-    app.delete("/alltouristspot/:email/:id", async(req,res)=>{
+    app.delete("/alltouristspot/:id", async(req,res)=>{
       const id = req.params.id;
-      const email = req.params.email;
-      const query = {_id : new ObjectId(id),email : email};
+      console.log(id);
+      const query = { _id:new ObjectId(id)};
       const result = await spotCollection.deleteOne(query);
       res.send(result);
     })
