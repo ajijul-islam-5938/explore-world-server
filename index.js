@@ -4,9 +4,6 @@ require("dotenv").config();
 const app = express();
 const port = process.env.PORT || 3000;
 
-console.log("DB_USER:", process.env.DB_USER);
-console.log("DB_PASSWORD:", process.env.DB_PASSWORD);
-
 // Middleware
 app.use(cors())
 app.use(express.json());
@@ -31,9 +28,15 @@ async function run() {
 
     // Get reference to the database and collection
     const database = client.db("publicDB");
+    const countryDB = client.db("countryData");
     const spotCollection = database.collection("spotCollection");
-
+    const countryCollection = countryDB.collection("countryCollection");
     // Define routes
+    app.get("/countries" , async (req,res)=>{
+      const data = await countryCollection.find().toArray();
+      res.send(data);
+    })
+
     app.get("/alltouristspot", async (req, res) => {
       const data = await spotCollection.find().toArray();
       res.send(data);
@@ -68,6 +71,14 @@ async function run() {
         }
       }
       const result = await spotCollection.updateOne(query,updatedSpot,option);
+      res.send(result);
+    })
+
+    app.delete("/alltouristspot/:email/:id", async(req,res)=>{
+      const id = req.params.id;
+      const email = req.params.email;
+      const query = {_id : new ObjectId(id),email : email};
+      const result = await spotCollection.deleteOne(query);
       res.send(result);
     })
 
